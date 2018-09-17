@@ -4,6 +4,7 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { YoutubeService } from '../../providers/youtube-service/youtube-service';
+import { SplashScreen } from '@ionic-native/splash-screen';
 
 @Component({
   templateUrl: './home.html', 
@@ -20,12 +21,14 @@ export class HomePage implements OnInit {
   onPlaying: boolean = false; 
 
   initialVideo: any;
+  pagedata: any = false;
 
   constructor(
     public http: Http,
     public nav:NavController,
     public ytPlayer: YoutubeService,
-    private socialSharing: SocialSharing
+    private socialSharing: SocialSharing,
+    private splashScreen: SplashScreen
     ) {
     // this.loadSettings();
   }
@@ -40,10 +43,10 @@ export class HomePage implements OnInit {
 
   fetchData(): void {
 
-    let url = 'https://www.googleapis.com/youtube/v3/search?part=id,snippet&channelId=' + this.channelID + '&q=' + this.searchQuery + '&type=video&order=viewCount&maxResults=' + this.maxResults + '&key=' + this.googleToken;
+    let url = 'https://www.googleapis.com/youtube/v3/search?part=id,snippet&channelId=' + this.channelID + '&q=' + this.searchQuery + '&type=video&order=date&maxResults=' + this.maxResults + '&key=' + this.googleToken;
 
-    if(this.pageToken) {
-      url += '&pageToken=' + this.pageToken;
+    if(this.pagedata) {
+      url += '&pageToken=' + this.pagedata.next;
     }
 
     this.http.get(url).map(res => res.json()).subscribe(data => {
@@ -58,6 +61,14 @@ export class HomePage implements OnInit {
       //     return entry.extra = videoData.items;
       //   });
       // });
+      // this.pagedata.prev = data.prevPageToken;
+      // this.pagedata.next = data.nextPageToken;
+      this.pagedata = {
+        prev: data.prevPageToken,
+        next: data.nextPageToken
+      }
+
+      this.splashScreen.hide();
       this.initialVideo = data.items.shift();
       this.posts = this.posts.concat(data.items);
 
@@ -75,10 +86,10 @@ export class HomePage implements OnInit {
       this.ytPlayer.launchPlayer(post.id, post.snippet.title);
   }
   loadMore(): void {
-      console.log("TODO: Implement loadMore()");
+    this.fetchData();
   }
 
-  share() {
-    this.socialSharing.share("Hello", "Hi", null, 'http://www.example.com');
+  share(title, videoId) {
+    this.socialSharing.share(title, title, null, 'https://www.youtube.com/watch?v=' + videoId);
   }
 }

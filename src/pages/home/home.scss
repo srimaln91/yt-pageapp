@@ -25,6 +25,10 @@
         text-overflow: initial;
         white-space: initial;
     }
+
+    .video-grid h2 {
+        font-size: 16px;
+    }
 }
 
 ion-nav > ion-page > ion-header > .youtube-player-header.toolbar.statusbar-padding:first-child {

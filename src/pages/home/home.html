@@ -12,7 +12,7 @@
 
   <div *ngFor="let post of posts">
 
-    <ion-grid>
+    <ion-grid class="video-grid">
       <ion-row (click)="playVideo($event, post)">
         <ion-col>
           <img src="{{post.snippet.thumbnails.medium.url}}">
@@ -23,13 +23,14 @@
       </ion-row>
       <ion-row>
         <ion-item actions>
-          <button primary clear item-right (click)="share()">
+          <button ion-button icon-start clear item-right (click)="share(post.snippet.title, post.id.videoId)">
             <ion-icon name='share'></ion-icon>
+            Share
           </button>
         </ion-item>
       </ion-row>
     </ion-grid>
   </div>
-  <button light>Load More...</button>
+  <button *ngIf="pagedata" ion-button full (click)="loadMore()">Load More...</button>
 
 </ion-content>
