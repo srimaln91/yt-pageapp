@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { HttpModule } from '@angular/http';
 import { SocialSharing } from '@ionic-native/social-sharing';
+import { Network } from '@ionic-native/network';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -30,6 +31,7 @@ import { SocialShare } from '../modules/social-share/social-share';
     StatusBar,
     SplashScreen,
     SocialSharing,
+    Network,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

@@ -13,22 +13,23 @@
   <div *ngFor="let post of posts">
 
     <ion-grid class="video-grid">
-      <ion-row (click)="playVideo($event, post)">
-        <ion-col>
+      <ion-row>
+        <ion-col (click)="playVideo($event, post)">
           <img src="{{post.snippet.thumbnails.medium.url}}">
         </ion-col>
         <ion-col>
-          <h2 class="item-text-wrap">{{post.snippet.title}}</h2>
+          <h2 class="item-text-wrap" (click)="playVideo($event, post)">{{post.snippet.title}}</h2>
+
+          <ion-item actions>
+            <button ion-button icon-start clear item-right (click)="share(post.snippet.title, post.id.videoId)">
+              <ion-icon name='share'></ion-icon>
+              Share
+            </button>
+          </ion-item>
+
         </ion-col>
       </ion-row>
-      <ion-row>
-        <ion-item actions>
-          <button ion-button icon-start clear item-right (click)="share(post.snippet.title, post.id.videoId)">
-            <ion-icon name='share'></ion-icon>
-            Share
-          </button>
-        </ion-item>
-      </ion-row>
+      
     </ion-grid>
   </div>
   <button *ngIf="pagedata" ion-button full (click)="loadMore()">Load More...</button>

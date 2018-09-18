@@ -1,0 +1,8 @@
+Todo
+
+01. https://forum.ionicframework.com/t/application-error-the-connection-to-the-server-was-unsuccessful/67584/10
+
+
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore android-release-unsigned.apk ytapp
+
+zipalign -v 4 app-release-unsigned.apk ytapp-new.apk

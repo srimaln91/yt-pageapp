@@ -5,7 +5,9 @@ import 'rxjs/add/operator/map';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { YoutubeService } from '../../providers/youtube-service/youtube-service';
 import { SplashScreen } from '@ionic-native/splash-screen';
-
+import { Network } from '@ionic-native/network';
+import { ToastController } from 'ionic-angular';
+import { LoadingController } from 'ionic-angular';
 @Component({
   templateUrl: './home.html', 
   providers:[YoutubeService, SocialSharing]
@@ -22,19 +24,58 @@ export class HomePage implements OnInit {
 
   initialVideo: any;
   pagedata: any = false;
+  loader: any;
 
   constructor(
     public http: Http,
     public nav:NavController,
     public ytPlayer: YoutubeService,
     private socialSharing: SocialSharing,
-    private splashScreen: SplashScreen
+    private splashScreen: SplashScreen,
+    private network: Network,
+    public toastCtrl: ToastController,
+    public loadingCtrl: LoadingController
     ) {
     // this.loadSettings();
+
+    this.loader = this.loadingCtrl.create({
+      content: "Please wait...",
+      duration: 3000
+    });
   }
 
   ngOnInit() {
     this.fetchData();
+
+    // watch network for a disconnect
+    this.network.onDisconnect().subscribe(() => {
+      const toast = this.toastCtrl.create({
+        message: 'Network Disconnected!',
+        duration: 3000,
+        cssClass: 'toast-error'
+      });
+      toast.present();
+    });
+
+    // watch network for a connection
+    let connectSubscription = this.network.onConnect().subscribe(() => {
+      console.log('network connected!');
+      // We just got a connection but we need to wait briefly
+      // before we determine the connection type. Might need to wait.
+      // prior to doing any api requests as well.
+      setTimeout(() => {
+        if( !this.pagedata ) {
+          const toast = this.toastCtrl.create({
+            message: 'Network Connected!',
+            duration: 3000
+          });
+          toast.present();
+          this.fetchData();
+
+        }
+      }, 3000);
+    });
+
   }
 
   launchYTPlayer(id, title): void {
@@ -48,6 +89,8 @@ export class HomePage implements OnInit {
     if(this.pagedata) {
       url += '&pageToken=' + this.pagedata.next;
     }
+
+    this.loader.present();
 
     this.http.get(url).map(res => res.json()).subscribe(data => {
       
@@ -69,6 +112,7 @@ export class HomePage implements OnInit {
       }
 
       this.splashScreen.hide();
+      this.loader.dismiss();
       this.initialVideo = data.items.shift();
       this.posts = this.posts.concat(data.items);
 
