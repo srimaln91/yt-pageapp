@@ -47,16 +47,6 @@ export class HomePage implements OnInit {
   ngOnInit() {
     this.fetchData();
 
-    // watch network for a disconnect
-    this.network.onDisconnect().subscribe(() => {
-      const toast = this.toastCtrl.create({
-        message: 'Network Disconnected!',
-        duration: 3000,
-        cssClass: 'toast-error'
-      });
-      toast.present();
-    });
-
     // watch network for a connection
     let connectSubscription = this.network.onConnect().subscribe(() => {
       console.log('network connected!');
@@ -65,13 +55,7 @@ export class HomePage implements OnInit {
       // prior to doing any api requests as well.
       setTimeout(() => {
         if( !this.pagedata ) {
-          const toast = this.toastCtrl.create({
-            message: 'Network Connected!',
-            duration: 3000
-          });
-          toast.present();
           this.fetchData();
-
         }
       }, 3000);
     });

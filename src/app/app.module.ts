@@ -7,24 +7,24 @@ import { HttpModule } from '@angular/http';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { Network } from '@ionic-native/network';
 
-import { MyApp } from './app.component';
+import { YtApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { SocialShare } from '../modules/social-share/social-share';
 
 @NgModule({
   declarations: [
-    MyApp,
+    YtApp,
     HomePage,
     SocialShare
   ],
   imports: [
     HttpModule,
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(YtApp)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
+    YtApp,
     HomePage
   ],
   providers: [
